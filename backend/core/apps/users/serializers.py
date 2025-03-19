@@ -1,10 +1,21 @@
 from rest_framework import serializers
-from .models import CustomUser
+
+# from .models import CustomUser
+
 
 class UserSerializer(serializers.Serializer):
-    id = serializers.UUIDField(unique=True, read_only=True)
-    email = serializers.EmailField(unique= True, read_only=True)
-    date_joined = serializers.DateTimeField(read_only=True)
+    id = serializers.UUIDField(read_only=True)
+    email = serializers.EmailField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    is_staff = serializers.BooleanField()
+    is_active = serializers.BooleanField()
+    is_superuser = serializers.BooleanField()
+    password = serializers.CharField(write_only=True, required= False)
+    role = serializers.CharField()
+    created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
-    is_staff = serializers.BooleanField(read_only=True)
-    is_active = serializers.BooleanField(read_only=True)
+
+
+
+
