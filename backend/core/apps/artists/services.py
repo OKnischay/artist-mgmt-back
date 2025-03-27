@@ -2,17 +2,39 @@ from .serializers import ArtistSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Artist
-
+from apps.users.models import CustomUser
 class ArtistServices:
+    # def create_artist(self, data):
+    #     serializer = ArtistSerializer(data=data)
+    #     if serializer.is_valid():
+    #         artist = self.save_artist(serializer.validated_data)
+    #         return Response(ArtistSerializer(artist).data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # def save_artist(self, validated_data):
+    #     return Artist.objects.create(**validated_data)
+
+
     def create_artist(self, data):
         serializer = ArtistSerializer(data=data)
+        
         if serializer.is_valid():
-            artist = self.save_artist(serializer.validated_data)
+           
+            artist = self.save_artist(serializer.validated_data)            
             return Response(ArtistSerializer(artist).data, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def save_artist(self, validated_data):
-        return Artist.objects.create(**validated_data)
+     
+        user_data = validated_data.pop('user', None)
+        user = None
+
+        if user_data:
+            user, created = CustomUser.objects.get_or_create(**user_data)
+        artist = Artist.objects.create(user=user, **validated_data)
+        return artist
+
     
 
     def update_artist(self, data ,id):
